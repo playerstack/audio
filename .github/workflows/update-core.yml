@@ -1,0 +1,41 @@
+name: Update @playerstack/core
+
+on:
+  repository_dispatch:
+    types: [core-released]
+
+jobs:
+  update-dependency:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Update @playerstack/core to ${{ github.event.client_payload.version }}
+        run: npm install @playerstack/core@${{ github.event.client_payload.version }} --save --package-lock-only
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet package-lock.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push
+        if: steps.diff.outputs.changed == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(deps): update @playerstack/core to ${{ github.event.client_payload.version }}"
+          file_pattern: package-lock.json
+          branch: main

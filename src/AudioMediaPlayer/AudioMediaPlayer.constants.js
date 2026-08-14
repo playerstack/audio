@@ -1,0 +1,17 @@
+export const playerStateInitial = {
+  kernelError: null,
+  seeking: false,
+  seek: 0,
+  played: 0,
+  loaded: 0,
+  duration: 0,
+  isEnded: false,
+  isLoading: true,
+  isBuffering: false,
+  volume: 0.8,
+  playbackRate: 1,
+  hasAudio: true,
+  loop: false,
+  playing: false,
+  isMuted: false,
+};
