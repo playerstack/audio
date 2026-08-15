@@ -9,15 +9,9 @@ import useDeepCompareMemoize from './useDeepCompareMemoize';
 const useChapters = ({ chapters, duration }) => {
   const stableChapters = useDeepCompareMemoize(chapters);
 
-  const segments = React.useMemo(
-    () => computeChapterSegments(stableChapters, duration),
-    [stableChapters, duration],
-  );
+  const segments = React.useMemo(() => computeChapterSegments(stableChapters, duration), [stableChapters, duration]);
 
-  const getChapterAtTime = React.useCallback(
-    (time) => coreGetChapterAtTime(segments, time),
-    [segments],
-  );
+  const getChapterAtTime = React.useCallback((time) => coreGetChapterAtTime(segments, time), [segments]);
 
   return { segments, getChapterAtTime };
 };

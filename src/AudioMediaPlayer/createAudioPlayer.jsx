@@ -1,21 +1,21 @@
-import React from "react";
-import merge from "deepmerge";
-import memoize from "memoize-one";
-import isEqual from "react-fast-compare";
+import React from 'react';
+import merge from 'deepmerge';
+import memoize from 'memoize-one';
+import isEqual from 'react-fast-compare';
 
-import { propTypes, defaultProps } from "./props.types";
-import AudioMediaPlayerSkin from "./index";
-import { omit } from "../utils";
+import { propTypes, defaultProps } from './props.types';
+import AudioMediaPlayerSkin from './index';
+import { omit } from '../utils';
 
-const IS_BROWSER = typeof window !== "undefined" && window.document && typeof document !== "undefined";
-const IS_GLOBAL = typeof global !== "undefined" && global.window && global.window.document;
+const IS_BROWSER = typeof window !== 'undefined' && window.document && typeof document !== 'undefined';
+const IS_GLOBAL = typeof global !== 'undefined' && global.window && global.window.document;
 const SUPPORTED_PROPS = Object.keys(propTypes);
 
 const UniversalSuspense = IS_BROWSER || IS_GLOBAL ? React.Suspense : () => null;
 
 export const createAudioPlayer = (player) => {
   return class AudioPlayer extends React.Component {
-    static displayName = "AudioPlayer";
+    static displayName = 'AudioPlayer';
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -61,7 +61,7 @@ export const createAudioPlayer = (player) => {
       return this.player.getSecondsLoaded();
     };
 
-    getInternalPlayer = (key = "player") => {
+    getInternalPlayer = (key = 'player') => {
       if (!this.player) return null;
       return this.player.getInternalPlayer(key);
     };
@@ -120,7 +120,7 @@ export const createAudioPlayer = (player) => {
 
       return (
         <AudioMediaPlayerSkin
-          key={activePlayer.key + "-audio"}
+          key={activePlayer.key + '-audio'}
           ref={this.references.player}
           activePlayer={activePlayer.lazyPlayer}
           player={this.player}
@@ -167,18 +167,16 @@ export const createAudioPlayer = (player) => {
       const { wrapper: Wrapper } = this.props;
       const url = this.props.url;
       const { className, ...attributes } = this.getAttributes();
-      const wrapperRef = typeof Wrapper === "string" ? this.references.wrapper : undefined;
+      const wrapperRef = typeof Wrapper === 'string' ? this.references.wrapper : undefined;
 
       return (
         <Wrapper
           ref={wrapperRef}
           data-testid="audio-player"
-          className={`playerstack-audio${className ? ` ${className}` : ""}`}
+          className={`playerstack-audio${className ? ` ${className}` : ''}`}
           {...attributes}
         >
-          <UniversalSuspense fallback={this.props.fallback}>
-            {this.renderActivePlayer(url)}
-          </UniversalSuspense>
+          <UniversalSuspense fallback={this.props.fallback}>{this.renderActivePlayer(url)}</UniversalSuspense>
         </Wrapper>
       );
     }
