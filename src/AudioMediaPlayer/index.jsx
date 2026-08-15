@@ -290,5 +290,6 @@ export default React.memo(
     p.onMount === n.onMount &&
     p.onPrevious === n.onPrevious &&
     p.onNext === n.onNext &&
-    p.showNavButtons === n.showNavButtons,
+    p.showNavButtons === n.showNavButtons &&
+    p.ads === n.ads,
 );

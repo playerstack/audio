@@ -4,8 +4,6 @@ const { string, bool, number, array, oneOfType, shape, object, func } = PropType
 
 export const propTypes = {
   url: string,
-  fullHDQualityBreak: PropTypes.number,
-  spriteVTTFile: PropTypes.string,
   playing: bool,
   loop: bool,
   volume: number,
@@ -15,12 +13,10 @@ export const propTypes = {
   height: oneOfType([string, number]),
   progressInterval: number,
   playsinline: bool,
-  pip: bool,
   stopOnUnmount: bool,
   config: shape({
     attributes: object,
     tracks: array,
-    forceVideo: bool,
     forceHLS: bool,
     forceSafariHLS: bool,
     forceDisableHls: bool,
@@ -42,10 +38,7 @@ export const propTypes = {
   onDuration: func,
   onSeek: func,
   onPlayBackRateChange: func,
-  onPlayBackQualityChange: func,
   onProgress: func,
-  onEnablePIP: func,
-  onDisablePIP: func,
 };
 
 const noop = () => {};
@@ -56,16 +49,14 @@ export const defaultProps = {
   volume: null,
   muted: false,
   playbackRate: 1,
-  width: '640px',
-  height: '360px',
+  width: '0',
+  height: '0',
   progressInterval: 1000,
-  playsinline: false,
-  pip: false,
+  playsinline: true,
   stopOnUnmount: true,
   config: {
     attributes: {},
     tracks: [],
-    forceVideo: false,
     forceHLS: false,
     forceDASH: false,
     forceFLV: false,
@@ -86,8 +77,5 @@ export const defaultProps = {
   onDuration: noop,
   onSeek: noop,
   onPlayBackRateChange: noop,
-  onPlayBackQualityChange: noop,
   onProgress: noop,
-  onEnablePIP: noop,
-  onDisablePIP: noop,
 };

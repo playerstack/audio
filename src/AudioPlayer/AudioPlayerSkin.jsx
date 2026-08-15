@@ -12,7 +12,7 @@ import SkipForwardIcon from '../Commons/Icons/SkipForwardIcon';
 import SkipAdIcon from '../Commons/Icons/SkipAdIcon';
 import AudioSettingsMenu from './components/AudioSettingsMenu';
 import Tooltip from '../Commons/Tooltip';
-import { buildIconProps } from '../Commons/constants';
+import { buildIconProps } from '@playerstack/core';
 import { getValue } from '../Commons/TimeTooltip/utils';
 import useChapters from '../hooks/useChapters';
 import useAds from '../hooks/useAds';
