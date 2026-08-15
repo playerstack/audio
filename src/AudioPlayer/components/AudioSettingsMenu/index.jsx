@@ -5,7 +5,7 @@ import SetttingsIcon from '../../../Commons/Icons/SetttingsIcon';
 import Tooltip from '../../../Commons/Tooltip';
 import ArrowLeftIcon from '../../../Commons/Icons/ArrowLeftIcon';
 import ArrowRightIcon from '../../../Commons/Icons/ArrowRightIcon';
-import { buildIconProps } from '../../../Commons/constants';
+import { buildIconProps } from '@playerstack/core';
 import useAppSelector from '../../../hooks/context/useAppSelector';
 
 import {
