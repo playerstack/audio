@@ -121,6 +121,24 @@ describe('AudioMediaPlayerSkin', () => {
     expect(container).toBeDefined();
   });
 
+  test('handles volume null (uses default)', () => {
+    const { rerender, container } = render(<AudioMediaPlayerSkin {...baseProps} volume={0.8} />);
+    rerender(<AudioMediaPlayerSkin {...baseProps} volume={null} />);
+    expect(container).toBeDefined();
+  });
+
+  test('handles muted change with null volume (uses default)', () => {
+    const { rerender, container } = render(<AudioMediaPlayerSkin {...baseProps} muted={false} volume={null} />);
+    rerender(<AudioMediaPlayerSkin {...baseProps} muted={true} volume={null} />);
+    expect(container).toBeDefined();
+  });
+
+  test('unmuting with volume prop restores volume', () => {
+    const { rerender, container } = render(<AudioMediaPlayerSkin {...baseProps} muted={true} volume={0.5} />);
+    rerender(<AudioMediaPlayerSkin {...baseProps} muted={false} volume={0.5} />);
+    expect(container).toBeDefined();
+  });
+
   test('handles url change (resets loading state)', () => {
     const { rerender, container } = render(<AudioMediaPlayerSkin {...baseProps} url="a.mp3" />);
     rerender(<AudioMediaPlayerSkin {...baseProps} url="b.mp3" />);

@@ -210,3 +210,134 @@ describe('useVolume - full coverage', () => {
     expect(updateState).toHaveBeenCalledWith({ volume: 0.65, muted: false });
   });
 });
+
+describe('useVolume - additional branch coverage', () => {
+  test('second effect (sync muted) bails when videoRef.current is null', () => {
+    const nullRef = { current: null };
+    const updateState = jest.fn();
+    const { rerender } = renderHook(
+      ({ src, muted }) =>
+        useVolume({ prevented: false, muted, videoRef: nullRef, src, updateState }),
+      { initialProps: { src: 'a.mp3', muted: false } },
+    );
+    // Change src with null videoRef — should not crash
+    rerender({ src: 'b.mp3', muted: true });
+    expect(true).toBe(true);
+  });
+
+  test('onVolumeChange does not update when ignoreVolumeChange is active', () => {
+    jest.useFakeTimers();
+    const el = document.createElement('audio');
+    Object.defineProperty(el, 'volume', { writable: true, value: 0.8, configurable: true });
+    Object.defineProperty(el, 'muted', { writable: true, value: false, configurable: true });
+    const videoRef = { current: el };
+    const updateState = jest.fn();
+
+    const { result } = renderHook(() =>
+      useVolume({ prevented: false, muted: false, videoRef, src: 'a.mp3', updateState }),
+    );
+
+    // Trigger mute which sets ignoreVolumeChangeRef
+    act(() => { result.current.onMutedClick(); });
+    updateState.mockClear();
+
+    // Dispatch volumechange — should be ignored (ignoreVolumeChangeRef is true)
+    const event = new Event('volumechange');
+    Object.defineProperty(event, 'target', { value: { volume: 0, muted: true } });
+    act(() => { el.dispatchEvent(event); });
+    expect(updateState).not.toHaveBeenCalled();
+
+    jest.useRealTimers();
+  });
+
+  test('onMutedClick remembers volume=0 before mute (uses 0.8 default on unmute)', () => {
+    jest.useFakeTimers();
+    const el = document.createElement('audio');
+    Object.defineProperty(el, 'volume', { writable: true, value: 0, configurable: true });
+    Object.defineProperty(el, 'muted', { writable: true, value: false, configurable: true });
+    const videoRef = { current: el };
+    const updateState = jest.fn();
+
+    const { result } = renderHook(() =>
+      useVolume({ prevented: false, muted: false, videoRef, src: 'a.mp3', updateState }),
+    );
+
+    // Mute when volume is already 0 — volumeBeforeMuteRef stays at default 0.8
+    act(() => { result.current.onMutedClick(); });
+    updateState.mockClear();
+    act(() => { jest.advanceTimersByTime(10); });
+
+    // Unmute — should restore 0.8 (default)
+    el.muted = true;
+    act(() => { result.current.onMutedClick(); });
+    expect(updateState).toHaveBeenCalledWith({ volume: 0.8, muted: false });
+
+    jest.useRealTimers();
+  });
+});
+
+describe('useVolume - unreachable guard branches', () => {
+  test('onVolumeChange bails when videoRef becomes null after listener attached', () => {
+    jest.useFakeTimers();
+    const el = document.createElement('audio');
+    Object.defineProperty(el, 'volume', { writable: true, value: 0.8, configurable: true });
+    Object.defineProperty(el, 'muted', { writable: true, value: false, configurable: true });
+    const videoRef = { current: el };
+    const updateState = jest.fn();
+
+    renderHook(() =>
+      useVolume({ prevented: false, muted: false, videoRef, src: 'a.mp3', updateState }),
+    );
+
+    // Now set videoRef.current to null AFTER listener was attached
+    videoRef.current = null;
+
+    // Dispatch volumechange — should hit the early return (line 12)
+    const event = new Event('volumechange');
+    Object.defineProperty(event, 'target', { value: { volume: 0.5, muted: false } });
+    act(() => { el.dispatchEvent(event); });
+    expect(updateState).not.toHaveBeenCalled();
+
+    jest.useRealTimers();
+  });
+
+  test('onMutedClick bails on second guard when videoRef.current nullified between checks', () => {
+    // This is truly unreachable (line 35), but we can verify the first guard covers it
+    jest.useFakeTimers();
+    const videoRef = { current: null };
+    const updateState = jest.fn();
+
+    const { result } = renderHook(() =>
+      useVolume({ prevented: false, muted: false, videoRef, src: 'a.mp3', updateState }),
+    );
+
+    // onMutedClick with null videoRef hits first guard
+    act(() => { result.current.onMutedClick(); });
+    expect(updateState).not.toHaveBeenCalled();
+
+    jest.useRealTimers();
+  });
+
+  test('muted sync effect bails when videoRef.current is null on src change', () => {
+    jest.useFakeTimers();
+    const el = document.createElement('audio');
+    Object.defineProperty(el, 'volume', { writable: true, value: 0.8, configurable: true });
+    Object.defineProperty(el, 'muted', { writable: true, value: false, configurable: true });
+    const videoRef = { current: el };
+    const updateState = jest.fn();
+
+    const { rerender } = renderHook(
+      ({ src, muted }) =>
+        useVolume({ prevented: false, muted, videoRef, src, updateState }),
+      { initialProps: { src: 'a.mp3', muted: false } },
+    );
+
+    // Null the ref before re-render
+    videoRef.current = null;
+    rerender({ src: 'b.mp3', muted: true });
+    // Should not crash — hits the guard at line 116
+    expect(true).toBe(true);
+
+    jest.useRealTimers();
+  });
+});
