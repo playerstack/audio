@@ -1,0 +1,71 @@
+name: 🐛 Bug Report
+description: Report a bug in @playerstack/audio player.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please fill out the sections below so we can reproduce and fix the issue.
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: A concise description of what is happening.
+      placeholder: "The audio player stops playback when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what should happen instead.
+      placeholder: "The player should continue playing..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps To Reproduce
+      description: Minimal steps to reproduce the behavior.
+      placeholder: |
+        1. Render `<AudioPlayer url="..." />`
+        2. Click play
+        3. Skip forward
+        4. Observe...
+    validations:
+      required: true
+
+  - type: input
+    id: reproduction-link
+    attributes:
+      label: Reproduction Link
+      description: Link to a minimal reproduction (CodeSandbox, StackBlitz, GitHub repo).
+      placeholder: "https://codesandbox.io/s/..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Relevant environment details.
+      value: |
+        - @playerstack/audio version:
+        - @playerstack/core version:
+        - React version:
+        - Browser:
+        - OS:
+        - Audio format (mp3, m3u8, etc.):
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Anything else (console logs, screenshots, audio file details).
+    validations:
+      required: false
