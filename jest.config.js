@@ -15,6 +15,8 @@ module.exports = {
   reporters: ["default", ["jest-junit", { outputDirectory: "coverage", outputName: "report.xml" }]],
   testMatch: ["<rootDir>/test/**/*.spec.(js|jsx)"],
   moduleNameMapper: {
+    "^@playerstack/core/icons/mobile$": "<rootDir>/node_modules/@playerstack/core/dist/cjs/icons/mobile/index.js",
+    "^@playerstack/core/icons$": "<rootDir>/node_modules/@playerstack/core/dist/cjs/icons/index.js",
     "^@playerstack/core$": "<rootDir>/test/__mocks__/core.js",
     "^@playerstack/core/(.*)$": "<rootDir>/test/__mocks__/core.js",
   },
