@@ -2,14 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formatTime, isMobile } from '@playerstack/core';
 
-import AudioPlayIcon from './icons/AudioPlayIcon';
-import AudioPauseIcon from './icons/AudioPauseIcon';
-import AudioReplayIcon from './icons/AudioReplayIcon';
-import MutedIcon from '../Commons/Icons/MutedIcon';
-import UnmutedIcon from '../Commons/Icons/UnmutedIcon';
-import SkipBackIcon from '../Commons/Icons/SkipBackIcon';
-import SkipForwardIcon from '../Commons/Icons/SkipForwardIcon';
-import SkipAdIcon from '../Commons/Icons/SkipAdIcon';
+import {
+  AudioPlayIcon,
+  AudioPauseIcon,
+  AudioReplayIcon,
+  MutedIcon,
+  UnmutedIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
+  SkipAdIcon,
+} from '@playerstack/core/icons';
 import AudioSettingsMenu from './components/AudioSettingsMenu';
 import Tooltip from '../Commons/Tooltip';
 import { buildIconProps } from '@playerstack/core';
