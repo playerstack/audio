@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { formatTime } from '@playerstack/core';
+import { formatTime, isMobile } from '@playerstack/core';
 
 import AudioPlayIcon from './icons/AudioPlayIcon';
 import AudioPauseIcon from './icons/AudioPauseIcon';
@@ -126,15 +126,23 @@ const AudioPlayerSkin = React.forwardRef(
       [],
     );
 
-    // Timeline seek logic
-    const seekFromEvent = React.useCallback(
-      (e) => {
+    // Timeline seek logic — unified for mouse and touch
+    const seekFromPosition = React.useCallback(
+      (clientX) => {
         if (!timelineRef.current || !duration) return;
         const rect = timelineRef.current.getBoundingClientRect();
-        const fraction = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const fraction = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
         changeCurrentTime(fraction * duration);
       },
       [duration, changeCurrentTime],
+    );
+
+    const seekFromEvent = React.useCallback(
+      (e) => {
+        const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+        seekFromPosition(clientX);
+      },
+      [seekFromPosition],
     );
 
     const handleTimelineMouseDown = React.useCallback(
@@ -154,6 +162,31 @@ const AudioPlayerSkin = React.forwardRef(
         document.addEventListener('mouseup', handleUp);
       },
       [duration, seekFromEvent, onSeeking],
+    );
+
+    const handleTimelineTouchStart = React.useCallback(
+      (e) => {
+        if (!duration) return;
+        e.preventDefault();
+        onSeeking?.(true);
+        seekFromPosition(e.touches[0].clientX);
+
+        const handleTouchMove = (moveEvent) => {
+          moveEvent.preventDefault();
+          if (moveEvent.touches[0]) {
+            seekFromPosition(moveEvent.touches[0].clientX);
+          }
+        };
+        const handleTouchEnd = () => {
+          onSeeking?.(false);
+          document.removeEventListener('touchmove', handleTouchMove);
+          document.removeEventListener('touchend', handleTouchEnd);
+        };
+
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd);
+      },
+      [duration, seekFromPosition, onSeeking],
     );
 
     // Timeline tooltip on hover
@@ -221,11 +254,15 @@ const AudioPlayerSkin = React.forwardRef(
       changeCurrentTime(newTime);
     }, [currentTime, duration, changeCurrentTime]);
 
-    // Volume drag on custom track
+    // Volume drag on custom track (desktop only — touch devices use hardware volume)
     const volumeTrackRef = React.useRef(null);
     const volumeContainerRef = React.useRef(null);
     const [volumeHovering, setVolumeHovering] = React.useState(false);
     const [volumeTooltipLeft, setVolumeTooltipLeft] = React.useState(null);
+
+    // On mobile, the volume slider is not rendered — user controls volume via
+    // hardware buttons. Only the mute/unmute toggle icon is shown.
+    const showVolumeSlider = !isMobile;
 
     const updateTooltipPosition = React.useCallback((clientX) => {
       const container = volumeContainerRef.current;
@@ -235,12 +272,25 @@ const AudioPlayerSkin = React.forwardRef(
       setVolumeTooltipLeft(left);
     }, []);
 
+    const setVolumeFromPosition = React.useCallback(
+      (clientX) => {
+        const track = volumeTrackRef.current;
+        if (!track) return;
+        const rect = track.getBoundingClientRect();
+        const usableWidth = rect.width - 12;
+        const offsetX = clientX - rect.left - 6;
+        const fraction = Math.max(0, Math.min(1, 1 - offsetX / usableWidth));
+        changeVolume(fraction);
+      },
+      [changeVolume],
+    );
+
     const setVolumeFromEvent = React.useCallback(
       (e) => {
         const track = e.currentTarget || volumeTrackRef.current;
         if (!track) return;
+        volumeTrackRef.current = track;
         const rect = track.getBoundingClientRect();
-        // Account for 6px padding on each side
         const usableWidth = rect.width - 12;
         const offsetX = e.clientX - rect.left - 6;
         const fraction = Math.max(0, Math.min(1, 1 - offsetX / usableWidth));
@@ -259,11 +309,7 @@ const AudioPlayerSkin = React.forwardRef(
         updateTooltipPosition(e.clientX);
 
         const handleMove = (moveEvent) => {
-          const rect = volumeTrackRef.current.getBoundingClientRect();
-          const usableWidth = rect.width - 12;
-          const offsetX = moveEvent.clientX - rect.left - 6;
-          const fraction = Math.max(0, Math.min(1, 1 - offsetX / usableWidth));
-          changeVolume(fraction);
+          setVolumeFromPosition(moveEvent.clientX);
           updateTooltipPosition(moveEvent.clientX);
         };
         const handleUp = () => {
@@ -274,7 +320,34 @@ const AudioPlayerSkin = React.forwardRef(
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('mouseup', handleUp);
       },
-      [setVolumeFromEvent, changeVolume, updateTooltipPosition],
+      [setVolumeFromEvent, setVolumeFromPosition, updateTooltipPosition],
+    );
+
+    const handleVolumeTouchStart = React.useCallback(
+      (e) => {
+        e.preventDefault();
+        volumeTrackRef.current = e.currentTarget;
+        const clientX = e.touches[0].clientX;
+        setVolumeFromPosition(clientX);
+        setVolumeDragging(true);
+        updateTooltipPosition(clientX);
+
+        const handleTouchMove = (moveEvent) => {
+          moveEvent.preventDefault();
+          if (moveEvent.touches[0]) {
+            setVolumeFromPosition(moveEvent.touches[0].clientX);
+            updateTooltipPosition(moveEvent.touches[0].clientX);
+          }
+        };
+        const handleTouchEnd = () => {
+          setVolumeDragging(false);
+          document.removeEventListener('touchmove', handleTouchMove);
+          document.removeEventListener('touchend', handleTouchEnd);
+        };
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd);
+      },
+      [setVolumeFromPosition, updateTooltipPosition],
     );
 
     const handleVolumeSliderEnter = React.useCallback(() => {
@@ -379,6 +452,7 @@ const AudioPlayerSkin = React.forwardRef(
                 <StyledTimelineTrack
                   ref={timelineRef}
                   onMouseDown={isAdActive ? undefined : handleTimelineMouseDown}
+                  onTouchStart={isAdActive ? undefined : handleTimelineTouchStart}
                   onMouseMove={isAdActive ? undefined : handleTimelineMouseMove}
                   onMouseLeave={isAdActive ? undefined : handleTimelineMouseLeave}
                   style={isAdActive ? { pointerEvents: 'none', cursor: 'default' } : undefined}
@@ -445,24 +519,27 @@ const AudioPlayerSkin = React.forwardRef(
 
           <StyledRightControls>
             <StyledVolumeContainer ref={volumeContainerRef}>
-              <StyledVolumeSliderWrapper
-                $dragging={volumeDragging}
-                onMouseEnter={handleVolumeSliderEnter}
-                onMouseLeave={handleVolumeSliderLeave}
-              >
-                <StyledVolumeTrack
-                  onMouseDown={handleVolumeMouseDown}
-                  role="slider"
-                  aria-label="Volume"
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={muted ? 0 : Math.round(volume * 100)}
+              {showVolumeSlider && (
+                <StyledVolumeSliderWrapper
+                  $dragging={volumeDragging}
+                  onMouseEnter={handleVolumeSliderEnter}
+                  onMouseLeave={handleVolumeSliderLeave}
                 >
-                  <StyledVolumeFill style={{ width: `${muted ? 0 : volume * 68}px` }} />
-                  <StyledVolumeThumb style={{ right: `${6 + (muted ? 0 : volume * 68)}px` }} />
-                </StyledVolumeTrack>
-              </StyledVolumeSliderWrapper>
-              {(volumeHovering || volumeDragging) && (
+                  <StyledVolumeTrack
+                    onMouseDown={handleVolumeMouseDown}
+                    onTouchStart={handleVolumeTouchStart}
+                    role="slider"
+                    aria-label="Volume"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={muted ? 0 : Math.round(volume * 100)}
+                  >
+                    <StyledVolumeFill style={{ width: `${muted ? 0 : volume * 68}px` }} />
+                    <StyledVolumeThumb style={{ right: `${6 + (muted ? 0 : volume * 68)}px` }} />
+                  </StyledVolumeTrack>
+                </StyledVolumeSliderWrapper>
+              )}
+              {showVolumeSlider && (volumeHovering || volumeDragging) && (
                 <StyledVolumeTooltip
                   style={
                     volumeTooltipLeft != null && volumeDragging
