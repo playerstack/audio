@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SetttingsIcon from '@Commons/Icons/SetttingsIcon';
+import { SettingsIcon, ArrowLeftIcon, ArrowRightIcon } from '@playerstack/core/icons';
 import Tooltip from '@Commons/Tooltip';
-import ArrowLeftIcon from '@Commons/Icons/ArrowLeftIcon';
-import ArrowRightIcon from '@Commons/Icons/ArrowRightIcon';
 import { buildIconProps } from '@playerstack/core';
 import { useAppSelector } from '@context/index';
 
@@ -99,7 +97,7 @@ const AudioSettingsMenu = ({ playbackRate, changePlaybackRate }) => {
           onClick={handleButtonClick}
           $expanded={menuOpen}
         >
-          <SetttingsIcon {...iconProps} />
+          <SettingsIcon {...iconProps} />
         </StyledSettingsButton>
       </Tooltip>
 

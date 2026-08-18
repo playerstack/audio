@@ -1,17 +1,19 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import MutedIcon from '@Commons/Icons/MutedIcon';
-import UnmutedIcon from '@Commons/Icons/UnmutedIcon';
-import SkipBackIcon from '@Commons/Icons/SkipBackIcon';
-import SkipForwardIcon from '@Commons/Icons/SkipForwardIcon';
-import SkipAdIcon from '@Commons/Icons/SkipAdIcon';
-import SetttingsIcon from '@Commons/Icons/SetttingsIcon';
-import ArrowLeftIcon from '@Commons/Icons/ArrowLeftIcon';
-import ArrowRightIcon from '@Commons/Icons/ArrowRightIcon';
-import AudioPlayIcon from '@AudioPlayer/icons/AudioPlayIcon';
-import AudioPauseIcon from '@AudioPlayer/icons/AudioPauseIcon';
-import AudioReplayIcon from '@AudioPlayer/icons/AudioReplayIcon';
+import {
+  MutedIcon,
+  UnmutedIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
+  SkipAdIcon,
+  SettingsIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  AudioPlayIcon,
+  AudioPauseIcon,
+  AudioReplayIcon,
+} from '@playerstack/core/icons';
 
 describe('Icons — branch coverage (default props)', () => {
   test('MutedIcon renders with default props', () => {
@@ -58,10 +60,10 @@ describe('Icons — branch coverage (default props)', () => {
     expect(c2.querySelector('svg').getAttribute('width')).toBe('20');
   });
 
-  test('SetttingsIcon renders with default and custom props', () => {
-    const { container: c1 } = render(<SetttingsIcon />);
+  test('SettingsIcon renders with default and custom props', () => {
+    const { container: c1 } = render(<SettingsIcon />);
     expect(c1.querySelector('svg')).toBeInTheDocument();
-    const { container: c2 } = render(<SetttingsIcon width={20} height={20} />);
+    const { container: c2 } = render(<SettingsIcon width={20} height={20} />);
     expect(c2.querySelector('svg').getAttribute('width')).toBe('20');
   });
 
