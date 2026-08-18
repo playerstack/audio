@@ -6,7 +6,7 @@ import Tooltip from '../../../Commons/Tooltip';
 import ArrowLeftIcon from '../../../Commons/Icons/ArrowLeftIcon';
 import ArrowRightIcon from '../../../Commons/Icons/ArrowRightIcon';
 import { buildIconProps } from '@playerstack/core';
-import useAppSelector from '../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../context/index';
 
 import {
   StyledSettingsContainer,

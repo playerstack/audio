@@ -1,4 +1,7 @@
-import { reducer, actionTypes } from '../../src/context/AppReducer';
+import { createTypedReducer } from '@playerstack/core';
+import { actionTypes } from '../../src/context/index';
+
+const reducer = createTypedReducer(actionTypes);
 
 describe('AppReducer', () => {
   const initial = { menuVisible: false, playerRef: null, videoRef: null, i18n: {} };

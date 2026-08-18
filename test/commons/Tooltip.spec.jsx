@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import Tooltip from '../../src/Commons/Tooltip';
 
 const Wrapper = ({ children, playerRef }) => {
   // Provide a playerRef in context
   const WrapperInner = () => {
-    const AppContext = require('../../src/context/AppContext').AppContext;
-    const ctx = React.useContext(AppContext);
+    const { Context } = require('../../src/context/index');
+    const ctx = React.useContext(Context);
     React.useEffect(() => {
       if (playerRef) {
         ctx.dispatch({ playerRef });
@@ -16,9 +16,9 @@ const Wrapper = ({ children, playerRef }) => {
     return children;
   };
   return (
-    <AppContextProvider language="en">
+    <Provider language="en">
       <WrapperInner />
-    </AppContextProvider>
+    </Provider>
   );
 };
 
@@ -40,22 +40,22 @@ describe('Tooltip', () => {
 
   test('renders children directly when no label', () => {
     const { getByText } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="">
           <button>Click me</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(getByText('Click me')).toBeInTheDocument();
   });
 
   test('renders children directly when disabled', () => {
     const { getByText, queryByText } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="Help text" disabled={true}>
           <button>Click me</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(getByText('Click me')).toBeInTheDocument();
     expect(queryByText('Help text')).not.toBeInTheDocument();
@@ -63,22 +63,22 @@ describe('Tooltip', () => {
 
   test('renders tooltip text when label provided', () => {
     const { getByText } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="Help text">
           <button>Click me</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(getByText('Help text')).toBeInTheDocument();
   });
 
   test('suppresses tooltip on click', () => {
     const { container } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="Help text">
           <button>Click me</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     const wrapper = container.firstChild;
     fireEvent.click(wrapper);
@@ -88,11 +88,11 @@ describe('Tooltip', () => {
 
   test('handles mouseEnter without playerRef', () => {
     const { container } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="Tip">
           <button>Btn</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     const wrapper = container.firstChild;
     fireEvent.mouseEnter(wrapper);
@@ -101,11 +101,11 @@ describe('Tooltip', () => {
 
   test('handles mouseLeave resets state', () => {
     const { container } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="Tip">
           <button>Btn</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     const wrapper = container.firstChild;
     fireEvent.mouseEnter(wrapper);
@@ -122,11 +122,11 @@ describe('Tooltip', () => {
     const playerRef = { current: playerEl };
 
     const { container } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="Tip" playerRefOverride={playerRef}>
           <button>Btn</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
 
     // Manually set playerRef in context by dispatching
@@ -150,8 +150,8 @@ describe('Tooltip', () => {
 
     // We need the tooltip to have access to playerRef through context
     const TestComp = () => {
-      const AppContext = require('../../src/context/AppContext').AppContext;
-      const { dispatch } = React.useContext(AppContext);
+      const { Context } = require('../../src/context/index');
+      const { dispatch } = React.useContext(Context);
       React.useEffect(() => {
         dispatch({ playerRef });
       }, []);
@@ -163,9 +163,9 @@ describe('Tooltip', () => {
     };
 
     const { container } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <TestComp />
-      </AppContextProvider>,
+      </Provider>,
     );
 
     const wrapper = container.querySelector('[class]');
@@ -176,11 +176,11 @@ describe('Tooltip', () => {
 
   test('renders with fullscreen prop', () => {
     const { getByText } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="FS Tip" fullscreen={true}>
           <button>Btn</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(getByText('FS Tip')).toBeInTheDocument();
   });
@@ -194,8 +194,8 @@ describe('Tooltip', () => {
     const playerRef = { current: playerEl };
 
     const TestComp = () => {
-      const AppContext = require('../../src/context/AppContext').AppContext;
-      const { dispatch } = React.useContext(AppContext);
+      const { Context } = require('../../src/context/index');
+      const { dispatch } = React.useContext(Context);
       React.useEffect(() => {
         dispatch({ playerRef });
       }, []);
@@ -207,9 +207,9 @@ describe('Tooltip', () => {
     };
 
     const { container } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <TestComp />
-      </AppContextProvider>,
+      </Provider>,
     );
 
     const wrappers = container.querySelectorAll('div');

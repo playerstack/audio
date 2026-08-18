@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { en, es } from '@playerstack/core';
+import { en, es, defaultMediaConfig, DEFAULT_PROGRESS_INTERVAL } from '@playerstack/core';
 
 const i18n = { en, es };
 const { string, bool, number, oneOfType, shape, object, func, node } = PropTypes;
@@ -85,7 +85,7 @@ export const defaultProps = {
   muted: false,
   playbackRate: 1,
   width: '100%',
-  progressInterval: 1000,
+  progressInterval: DEFAULT_PROGRESS_INTERVAL,
   playsinline: false,
   stopOnUnmount: true,
   fallback: null,
@@ -98,14 +98,7 @@ export const defaultProps = {
   chapters: [],
   ads: null,
   config: {
-    forceHLS: false,
-    forceDASH: false,
-    forceFLV: false,
-    hlsOptions: {},
-    hlsVersion: '1.5.7',
-    dashVersion: '4.7.4',
-    flvVersion: '1.6.2',
-    forceDisableHls: false,
+    ...defaultMediaConfig,
   },
   onReady: noop,
   onStart: noop,

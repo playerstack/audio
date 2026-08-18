@@ -1,4 +1,4 @@
-import { omit } from '../../src/utils/index';
+import { omit } from '@playerstack/core';
 
 describe('omit', () => {
   test('removes specified keys', () => {

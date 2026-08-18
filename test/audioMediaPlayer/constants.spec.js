@@ -1,4 +1,4 @@
-import { playerStateInitial } from '../../src/AudioMediaPlayer/AudioMediaPlayer.constants';
+import { audioPlayerStateInitial as playerStateInitial } from '@playerstack/core';
 
 describe('AudioMediaPlayer.constants', () => {
   test('playerStateInitial has expected defaults', () => {

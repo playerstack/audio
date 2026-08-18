@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import AudioSettingsMenu from '../../src/AudioPlayer/components/AudioSettingsMenu';
 
-const Wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const Wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('AudioSettingsMenu — full coverage', () => {
   const baseProps = {

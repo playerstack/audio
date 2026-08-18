@@ -1,11 +1,5 @@
 import { renderHook } from '@testing-library/react';
-
-jest.mock('react-fast-compare', () => ({
-  __esModule: true,
-  default: (a, b) => JSON.stringify(a) === JSON.stringify(b),
-}));
-
-const useDeepCompareMemoize = require('../../src/hooks/useDeepCompareMemoize').default;
+import { useDeepCompareMemoize } from '@playerstack/core/hooks';
 
 describe('useDeepCompareMemoize', () => {
   test('returns same reference for equal values', () => {

@@ -1,5 +1,5 @@
 import { canPlay } from '@playerstack/core';
-import { lazy } from '../utils/player';
+import { lazy } from '@playerstack/core/hooks';
 
 export default {
   key: 'core',

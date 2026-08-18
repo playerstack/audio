@@ -275,6 +275,6 @@ describe('usePlayerProxy — full coverage', () => {
     });
     const updater = updateState.mock.calls[0][0];
     const newState = updater({});
-    expect(newState.kernelError.detail).toBe('Something was wrong with the playback.');
+    expect(newState.kernelError.detail).toBe('Something was wrong with the playback. Please try again.');
   });
 });

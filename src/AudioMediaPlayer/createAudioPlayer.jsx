@@ -5,7 +5,7 @@ import isEqual from 'react-fast-compare';
 
 import { propTypes, defaultProps } from './props.types';
 import AudioMediaPlayerSkin from './index';
-import { omit } from '../utils';
+import { omit } from '@playerstack/core';
 
 const IS_BROWSER = typeof window !== 'undefined' && window.document && typeof document !== 'undefined';
 const IS_GLOBAL = typeof global !== 'undefined' && global.window && global.window.document;

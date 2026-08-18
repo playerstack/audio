@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-import useAppSelector from '../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../context/index';
 
 export const StyledTooltipWrapper = styled.div`
   position: relative;

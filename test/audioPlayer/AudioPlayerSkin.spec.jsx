@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import AudioPlayerSkin from '../../src/AudioPlayer/AudioPlayerSkin';
 
-const Wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const Wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('AudioPlayerSkin', () => {
   const baseProps = {

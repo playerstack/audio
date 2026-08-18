@@ -1,11 +1,11 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
-import useAppDispatch from '../../src/hooks/context/useAppDispatch';
+import { Provider } from '../../src/context/index';
+import { useAppDispatch } from '../../src/context/index';
 
 describe('useAppDispatch', () => {
   const wrapper = ({ children }) => (
-    <AppContextProvider language="en">{children}</AppContextProvider>
+    <Provider language="en">{children}</Provider>
   );
 
   test('returns a function', () => {

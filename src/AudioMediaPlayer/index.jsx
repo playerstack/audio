@@ -2,10 +2,11 @@ import React from 'react';
 
 import PlayerProxy from '../core/PlayerProxy';
 import AudioPlayerSkin from '../AudioPlayer/AudioPlayerSkin';
-import { playerStateInitial } from './AudioMediaPlayer.constants';
+import { audioPlayerStateInitial as playerStateInitial } from '@playerstack/core';
 import usePlayerProxy from './hooks/usePlayerProxy';
-import useVolume from '../hooks/useVolume';
-import { AppContextProvider } from '../context/AppContextProvider';
+import { useVolume } from '@playerstack/core/hooks';
+import { createWebVolumeAdapter } from '../utils/volumeAdapter';
+import { Provider } from '../context/index';
 import AudioPlayerWrapper from './AudioPlayerWrapper';
 
 const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
@@ -139,11 +140,10 @@ const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
   );
 
   // Volume management
+  const volumeAdapter = React.useMemo(() => createWebVolumeAdapter(videoRef), []);
   const { onMutedClick, changeVolume } = useVolume({
-    prevented: false,
+    adapter: volumeAdapter,
     muted: playerState.isMuted,
-    videoRef,
-    src: videoUrl,
     updateState: ({ muted, volume }) =>
       setPlayerState((prev) => ({
         ...prev,
@@ -190,7 +190,7 @@ const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
   }, []);
 
   return (
-    <AppContextProvider language={props.language}>
+    <Provider language={props.language}>
       <AudioPlayerWrapper ref={playerRef} tabIndex={0} role="application" dir="ltr">
         {videoUrl && (
           <PlayerProxy
@@ -247,7 +247,7 @@ const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
           ads={props.ads}
         />
       </AudioPlayerWrapper>
-    </AppContextProvider>
+    </Provider>
   );
 });
 
