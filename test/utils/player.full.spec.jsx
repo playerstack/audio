@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
-import { lazy } from '../../src/utils/player';
+import { lazy } from '@playerstack/core/hooks';
 
 describe('lazy — full coverage', () => {
   test('returns a React.lazy-like component', () => {
@@ -27,9 +27,9 @@ describe('lazy — full coverage', () => {
     });
   });
 
-  test('resolves module with default NOT a function (nested default)', async () => {
-    const MyComp = () => <div data-testid="nested-comp">Nested</div>;
-    const LazyComp = lazy(() => Promise.resolve({ default: { default: MyComp } }));
+  test('resolves module without default (bare component)', async () => {
+    const MyComp = () => <div data-testid="bare-comp">Bare</div>;
+    const LazyComp = lazy(() => Promise.resolve(MyComp));
 
     let container;
     await act(async () => {
@@ -41,7 +41,7 @@ describe('lazy — full coverage', () => {
       container = result.container;
     });
     await waitFor(() => {
-      expect(container.querySelector('[data-testid="nested-comp"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="bare-comp"]')).toBeInTheDocument();
     });
   });
 });

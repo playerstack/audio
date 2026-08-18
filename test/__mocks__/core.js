@@ -7,7 +7,14 @@ module.exports = {
     const secs = Math.floor(seconds % 60);
     return mins + ':' + String(secs).padStart(2, '0');
   },
-  omit: (obj, keys) => Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k))),
+  omit: (obj, ...keysOrArrays) => {
+    const keys = [];
+    for (const arg of keysOrArrays) {
+      if (Array.isArray(arg)) keys.push(...arg);
+      else keys.push(arg);
+    }
+    return Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
+  },
   indexBy: (arr, key) => arr.reduce((acc, item) => { acc[item[key]] = item; return acc; }, {}),
   isMediaStream: () => false,
   isBlobUrl: () => false,
@@ -37,9 +44,29 @@ module.exports = {
   hasAudio: () => true,
   supportsWebKitPresentationMode: () => false,
 
+  // Default config constants
+  DEFAULT_PROGRESS_INTERVAL: 1000,
+  defaultMediaConfig: {
+    forceHLS: false,
+    forceDASH: false,
+    forceFLV: false,
+    hlsOptions: {},
+    hlsVersion: '1.5.7',
+    dashVersion: '4.7.4',
+    flvVersion: '1.6.2',
+    forceDisableHls: false,
+  },
+
   // i18n
   en: { play: 'Play', pause: 'Pause', mute: 'Mute', unmute: 'Unmute', settings: 'Settings', speed: 'Speed', normal: 'Normal', skipBack: 'Skip back', skipForward: 'Skip forward', replay: 'Replay', skipAd: 'Skip ad' },
   es: { play: 'Reproducir', pause: 'Pausar', mute: 'Silenciar', unmute: 'Activar sonido', settings: 'Configuración', speed: 'Velocidad', normal: 'Normal', skipBack: 'Retroceder', skipForward: 'Avanzar', replay: 'Repetir', skipAd: 'Omitir anuncio' },
+  getTranslations: (language) => {
+    const translations = {
+      en: { play: 'Play', pause: 'Pause', mute: 'Mute', unmute: 'Unmute', settings: 'Settings', speed: 'Speed', normal: 'Normal', skipBack: 'Skip back', skipForward: 'Skip forward', replay: 'Replay', skipAd: 'Skip ad' },
+      es: { play: 'Reproducir', pause: 'Pausar', mute: 'Silenciar', unmute: 'Activar sonido', settings: 'Configuración', speed: 'Velocidad', normal: 'Normal', skipBack: 'Retroceder', skipForward: 'Avanzar', replay: 'Repetir', skipAd: 'Omitir anuncio' },
+    };
+    return translations[language] || translations.en;
+  },
 
   // Player State
   playerStateInitial: {
@@ -65,6 +92,25 @@ module.exports = {
     activeCaption: null,
   },
   reduceSeekState: (prev, seeking) => ({ ...prev, seeking, isEnded: false, playing: seeking ? prev.playing : true }),
+
+  // Audio Player State (subset)
+  audioPlayerStateInitial: {
+    kernelError: null,
+    seeking: false,
+    seek: 0,
+    played: 0,
+    loaded: 0,
+    duration: 0,
+    isEnded: false,
+    isLoading: true,
+    isBuffering: false,
+    volume: 0.8,
+    playbackRate: 1,
+    hasAudio: true,
+    loop: false,
+    playing: false,
+    isMuted: false,
+  },
 
   // Chapters
   computeChapterSegments: (chapters, duration) => {

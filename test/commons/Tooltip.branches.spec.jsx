@@ -1,8 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider, Context } from '../../src/context/index';
 import Tooltip from '../../src/Commons/Tooltip';
-import { AppContext } from '../../src/context/AppContext';
 
 /**
  * Branch coverage for Tooltip offsetX clamping:
@@ -22,7 +21,7 @@ describe('Tooltip — branch coverage (clamping)', () => {
 
   function renderWithPlayerRef(playerEl, tooltipLabel = 'Tip') {
     const TestComp = () => {
-      const { dispatch } = React.useContext(AppContext);
+      const { dispatch } = React.useContext(Context);
       React.useEffect(() => {
         dispatch({ playerRef: { current: playerEl } });
       }, [dispatch]);
@@ -34,9 +33,9 @@ describe('Tooltip — branch coverage (clamping)', () => {
     };
 
     return render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <TestComp />
-      </AppContextProvider>,
+      </Provider>,
     );
   }
 
@@ -111,11 +110,11 @@ describe('Tooltip — branch coverage (clamping)', () => {
   test('offsetX is 0 when no tooltipEl/wrapperEl/playerElement', () => {
     // playerRef is null — handleMouseEnter early returns
     const { container } = render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <Tooltip label="Tip">
           <button>Btn</button>
         </Tooltip>
-      </AppContextProvider>,
+      </Provider>,
     );
     const wrapper = container.querySelector('div');
     fireEvent.mouseEnter(wrapper);

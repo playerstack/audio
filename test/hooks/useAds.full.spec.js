@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-
-const useAds = require('../../src/hooks/useAds').default;
+import { useAds } from '@playerstack/core/hooks';
+import { webAdsPlatform } from '../../src/utils/adsPlatform';
 
 describe('useAds — full coverage', () => {
   const baseParams = {
@@ -11,6 +11,7 @@ describe('useAds — full coverage', () => {
     paused: true,
     ended: false,
     onPauseClick: jest.fn(),
+    platform: webAdsPlatform,
   };
 
   test('inactive when ads is null', () => {

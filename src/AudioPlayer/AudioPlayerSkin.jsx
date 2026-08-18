@@ -14,10 +14,10 @@ import AudioSettingsMenu from './components/AudioSettingsMenu';
 import Tooltip from '../Commons/Tooltip';
 import { buildIconProps } from '@playerstack/core';
 import { getValue } from '../Commons/TimeTooltip/utils';
-import useChapters from '../hooks/useChapters';
-import useAds from '../hooks/useAds';
-import useAppDispatch from '../hooks/context/useAppDispatch';
-import useAppSelector from '../hooks/context/useAppSelector';
+import { useChapters } from '@playerstack/core/hooks';
+import { useAds } from '@playerstack/core/hooks';
+import { webAdsPlatform } from '../utils/adsPlatform';
+import { useAppDispatch, useAppSelector } from '../context/index';
 
 import {
   StyledAudioPlayerSkin,
@@ -105,6 +105,7 @@ const AudioPlayerSkin = React.forwardRef(
       paused,
       ended,
       onPauseClick,
+      platform: webAdsPlatform,
     });
 
     // Current chapter for paused view label

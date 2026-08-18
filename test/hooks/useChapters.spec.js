@@ -1,7 +1,7 @@
 import React from "react";
 import { renderHook } from "@testing-library/react";
 
-const useChapters = require("../../src/hooks/useChapters").default;
+import { useChapters } from '@playerstack/core/hooks';
 
 describe("useChapters", () => {
   it("returns empty segments when no chapters", () => {
