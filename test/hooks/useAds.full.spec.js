@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { useAds } from '@playerstack/core/hooks';
-import { webAdsPlatform } from '../../src/utils/adsPlatform';
+import { webAdsPlatform } from '@utils/adsPlatform';
 
 describe('useAds — full coverage', () => {
   const baseParams = {

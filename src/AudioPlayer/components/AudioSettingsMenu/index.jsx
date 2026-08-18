@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SetttingsIcon from '../../../Commons/Icons/SetttingsIcon';
-import Tooltip from '../../../Commons/Tooltip';
-import ArrowLeftIcon from '../../../Commons/Icons/ArrowLeftIcon';
-import ArrowRightIcon from '../../../Commons/Icons/ArrowRightIcon';
+import SetttingsIcon from '@Commons/Icons/SetttingsIcon';
+import Tooltip from '@Commons/Tooltip';
+import ArrowLeftIcon from '@Commons/Icons/ArrowLeftIcon';
+import ArrowRightIcon from '@Commons/Icons/ArrowRightIcon';
 import { buildIconProps } from '@playerstack/core';
-import { useAppSelector } from '../../../context/index';
+import { useAppSelector } from '@context/index';
 
 import {
   StyledSettingsContainer,
@@ -21,7 +21,7 @@ import {
   StyledSubMenuContent,
   StyledSubMenuList,
   StyledSubMenuItem,
-} from './AudioSettingsMenu.styled.jsx';
+} from '@AudioPlayer/components/AudioSettingsMenu/AudioSettingsMenu.styled.jsx';
 
 const SPEED_OPTIONS = [2, 1.5, 1.25, 1, 0.75, 0.5];
 

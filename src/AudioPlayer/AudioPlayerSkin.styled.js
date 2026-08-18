@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { scopedReset } from '../Commons/scopedReset';
+import { scopedReset } from '@Commons/scopedReset';
 
 export const StyledAudioPlayerSkin = styled.div`
   ${scopedReset}

@@ -1,13 +1,13 @@
 import React from 'react';
 
-import PlayerProxy from '../core/PlayerProxy';
-import AudioPlayerSkin from '../AudioPlayer/AudioPlayerSkin';
+import PlayerProxy from '@core/PlayerProxy';
+import AudioPlayerSkin from '@AudioPlayer/AudioPlayerSkin';
 import { audioPlayerStateInitial as playerStateInitial } from '@playerstack/core';
-import usePlayerProxy from './hooks/usePlayerProxy';
+import usePlayerProxy from '@AudioMediaPlayer/hooks/usePlayerProxy';
 import { useVolume } from '@playerstack/core/hooks';
-import { createWebVolumeAdapter } from '../utils/volumeAdapter';
-import { Provider } from '../context/index';
-import AudioPlayerWrapper from './AudioPlayerWrapper';
+import { createWebVolumeAdapter } from '@utils/volumeAdapter';
+import { Provider } from '@context/index';
+import AudioPlayerWrapper from '@AudioMediaPlayer/AudioPlayerWrapper';
 
 const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
   const [playerState, setPlayerState] = React.useState({

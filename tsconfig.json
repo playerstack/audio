@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@*": ["./src/*"]
+    }
   },
-  "include": [
-    "types/**/*.d.ts"
-  ]
+  "include": ["types/**/*.d.ts", "src/**/*.js", "src/**/*.jsx"]
 }

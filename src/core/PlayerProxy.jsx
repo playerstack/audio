@@ -1,7 +1,7 @@
 import React from 'react';
 import isEqual from 'react-fast-compare';
 
-import { propTypes, defaultProps } from './props.types';
+import { propTypes, defaultProps } from '@core/props.types';
 import { isMediaStream } from '@playerstack/core';
 
 const SEEK_ON_PLAY_EXPIRY = 5000;

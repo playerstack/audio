@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import {
   StyledSettingsPanel,
   StyledSettingsItem,
-} from '../../src/AudioPlayer/AudioPlayerSkin.styled';
+} from '@AudioPlayer/AudioPlayerSkin.styled';
 
 describe('AudioPlayerSkin.styled — branch coverage for unused exports', () => {
   test('StyledSettingsPanel visible=true renders block', () => {

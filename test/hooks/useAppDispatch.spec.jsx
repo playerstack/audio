@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import { useAppDispatch } from '../../src/context/index';
+import { Provider } from '@context/index';
+import { useAppDispatch } from '@context/index';
 
 describe('useAppDispatch', () => {
   const wrapper = ({ children }) => (
