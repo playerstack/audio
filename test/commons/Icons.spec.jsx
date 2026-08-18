@@ -1,17 +1,17 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import MutedIcon from '../../src/Commons/Icons/MutedIcon';
-import UnmutedIcon from '../../src/Commons/Icons/UnmutedIcon';
-import SkipBackIcon from '../../src/Commons/Icons/SkipBackIcon';
-import SkipForwardIcon from '../../src/Commons/Icons/SkipForwardIcon';
-import SkipAdIcon from '../../src/Commons/Icons/SkipAdIcon';
-import SetttingsIcon from '../../src/Commons/Icons/SetttingsIcon';
-import ArrowLeftIcon from '../../src/Commons/Icons/ArrowLeftIcon';
-import ArrowRightIcon from '../../src/Commons/Icons/ArrowRightIcon';
-import AudioPlayIcon from '../../src/AudioPlayer/icons/AudioPlayIcon';
-import AudioPauseIcon from '../../src/AudioPlayer/icons/AudioPauseIcon';
-import AudioReplayIcon from '../../src/AudioPlayer/icons/AudioReplayIcon';
+import MutedIcon from '@Commons/Icons/MutedIcon';
+import UnmutedIcon from '@Commons/Icons/UnmutedIcon';
+import SkipBackIcon from '@Commons/Icons/SkipBackIcon';
+import SkipForwardIcon from '@Commons/Icons/SkipForwardIcon';
+import SkipAdIcon from '@Commons/Icons/SkipAdIcon';
+import SetttingsIcon from '@Commons/Icons/SetttingsIcon';
+import ArrowLeftIcon from '@Commons/Icons/ArrowLeftIcon';
+import ArrowRightIcon from '@Commons/Icons/ArrowRightIcon';
+import AudioPlayIcon from '@AudioPlayer/icons/AudioPlayIcon';
+import AudioPauseIcon from '@AudioPlayer/icons/AudioPauseIcon';
+import AudioReplayIcon from '@AudioPlayer/icons/AudioReplayIcon';
 
 describe('Icons — branch coverage (default props)', () => {
   test('MutedIcon renders with default props', () => {

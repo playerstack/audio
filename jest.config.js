@@ -60,4 +60,5 @@ module.exports = {
     '^@playerstack/core$': '<rootDir>/test/__mocks__/core.js',
     '^@playerstack/core/(.*)$': '<rootDir>/test/__mocks__/core.js',
   },
+  resolver: '<rootDir>/jest.resolver.js',
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { renderHook } from "@testing-library/react";
 import { useAds } from "@playerstack/core/hooks";
-import { webAdsPlatform } from "../../src/utils/adsPlatform";
+import { webAdsPlatform } from "@utils/adsPlatform";
 
 describe("useAds", () => {
   it("returns inactive when no ads configured", () => {

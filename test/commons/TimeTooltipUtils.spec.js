@@ -1,4 +1,4 @@
-import { getValue } from '../../src/Commons/TimeTooltip/utils';
+import { getValue } from '@Commons/TimeTooltip/utils';
 
 describe('TimeTooltip/utils', () => {
   describe('getValue', () => {

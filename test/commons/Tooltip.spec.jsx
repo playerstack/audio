@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import Tooltip from '../../src/Commons/Tooltip';
+import { Provider } from '@context/index';
+import Tooltip from '@Commons/Tooltip';
 
 const Wrapper = ({ children, playerRef }) => {
   // Provide a playerRef in context

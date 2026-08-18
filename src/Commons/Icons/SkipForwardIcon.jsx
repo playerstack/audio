@@ -1,5 +1,5 @@
 import React from 'react';
-import { compareProps, propTypes } from './Icons.constants';
+import { compareProps, propTypes } from '@Commons/Icons/Icons.constants';
 
 /**
  * Seek forward 10 seconds icon.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledAudioWrapper } from './AudioMediaPlayer.styled';
+import { StyledAudioWrapper } from '@AudioMediaPlayer/AudioMediaPlayer.styled';
 
 /**
  * AudioPlayerWrapper provides a styled container for the audio player.

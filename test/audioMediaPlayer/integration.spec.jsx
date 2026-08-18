@@ -23,7 +23,7 @@ jest.mock('../../src/core/PlayerProxy', () => {
   });
 });
 
-import AudioMediaPlayerSkin from '../../src/AudioMediaPlayer/index';
+import AudioMediaPlayerSkin from '@AudioMediaPlayer/index';
 
 describe('AudioMediaPlayerSkin — integration (callbacks coverage)', () => {
   const seekTo = jest.fn();

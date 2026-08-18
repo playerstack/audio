@@ -1,4 +1,4 @@
-import { createWebPlayerAdapter } from '../../src/utils/webPlayerAdapter';
+import { createWebPlayerAdapter } from '@utils/webPlayerAdapter';
 
 function createMockAudioElement() {
   return {

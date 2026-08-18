@@ -5,6 +5,7 @@ import process from 'node:process';
 import { realpath } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
+import path from 'node:path';
 import { glob } from 'glob';
 
 const nodePath = await realpath(process.argv[1]);
@@ -66,6 +67,36 @@ export async function build(positionals, args) {
 
   const entryPoints = getAllFiles(positionals, args?.exclude?.split(',') ?? []);
 
+  // Built-in alias plugin: resolves @foo/bar to src/foo/bar
+  const srcRoot = path.resolve(process.cwd(), 'src');
+  const aliasResolvePlugin = {
+    name: 'alias-resolve',
+    setup(build) {
+      build.onResolve({ filter: /^@/ }, (resolveArgs) => {
+        // Skip npm scoped packages
+        if (resolveArgs.path.startsWith('@playerstack/')) return null;
+        const stripped = resolveArgs.path.slice(1);
+        const candidate = path.resolve(srcRoot, stripped);
+        const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json'];
+        if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+          return { path: candidate };
+        }
+        for (const ext of extensions) {
+          if (fs.existsSync(candidate + ext)) {
+            return { path: candidate + ext };
+          }
+        }
+        for (const ext of extensions) {
+          const indexPath = path.join(candidate, 'index' + ext);
+          if (fs.existsSync(indexPath)) {
+            return { path: indexPath };
+          }
+        }
+        return null;
+      });
+    },
+  };
+
   const options = {
     logLevel: args['log-level'] ?? 'info',
     entryPoints: entryPoints,
@@ -82,7 +113,7 @@ export async function build(positionals, args) {
     external: argsArray(args, 'external'),
     outExtension: argsObject(args, 'out-extension'),
     banner: argsObject(args, 'banner'),
-    plugins: Object.entries(argsObject(args, 'plugin')).map(([name, options]) => plugins[name](options)),
+    plugins: [aliasResolvePlugin, ...Object.entries(argsObject(args, 'plugin')).map(([name, options]) => plugins[name](options))],
     define: {
       'globalThis.__TEST__': 'false',
       ...argsObject(args, 'define'),

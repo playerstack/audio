@@ -1,4 +1,4 @@
-import playerCore from '../../src/core/index';
+import playerCore from '@core/index';
 
 describe('core/index', () => {
   test('exports key, name, canPlay, lazyPlayer', () => {

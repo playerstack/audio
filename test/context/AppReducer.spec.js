@@ -1,5 +1,5 @@
 import { createTypedReducer } from '@playerstack/core';
-import { actionTypes } from '../../src/context/index';
+import { actionTypes } from '@context/index';
 
 const reducer = createTypedReducer(actionTypes);
 

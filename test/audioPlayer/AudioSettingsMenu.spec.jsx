@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import AudioSettingsMenu from '../../src/AudioPlayer/components/AudioSettingsMenu';
+import { Provider } from '@context/index';
+import AudioSettingsMenu from '@AudioPlayer/components/AudioSettingsMenu';
 
 const Wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

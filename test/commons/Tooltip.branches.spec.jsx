@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { Provider, Context } from '../../src/context/index';
-import Tooltip from '../../src/Commons/Tooltip';
+import { Provider, Context } from '@context/index';
+import Tooltip from '@Commons/Tooltip';
 
 /**
  * Branch coverage for Tooltip offsetX clamping:
