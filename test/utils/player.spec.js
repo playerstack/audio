@@ -1,4 +1,4 @@
-import { lazy } from '@playerstack/core/hooks';
+import { lazy } from '@hooks/utils/lazy';
 
 describe('lazy', () => {
   test('returns a React.lazy component', () => {

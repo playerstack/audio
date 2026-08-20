@@ -1,4 +1,4 @@
-import { usePlayerCallbackProxy } from '@playerstack/core/hooks';
+import { usePlayerCallbackProxy } from '@hooks/usePlayerCallbackProxy';
 
 /**
  * Hook that builds stable proxy callbacks for the PlayerProxy component.

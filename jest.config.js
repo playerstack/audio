@@ -1,14 +1,16 @@
 const path = require('path');
 const fs = require('fs');
 
-// In dev workspace, core source lives at ../core/src (symlinked via postinstall).
-// In CI, core is installed from npm and lives at node_modules/@playerstack/core/dist/cjs.
-const localCoreSrc = path.resolve(__dirname, '../core/src');
-const hasLocalCore = fs.existsSync(localCoreSrc);
+// Always consume core's built CJS output (same as the published package / CI).
+// The dev workspace symlinks node_modules/@playerstack/core → ../core, so rebuilding
+// core keeps this fresh. Resolving to dist avoids transforming core's TypeScript
+// with esbuild-jest (which trips on `export type` re-exports).
+const distCoreCjs = path.resolve(__dirname, '../core/dist/cjs');
+const hasLocalCore = fs.existsSync(distCoreCjs);
 
 function corePath(subpath) {
   if (hasLocalCore) {
-    return path.join(localCoreSrc, subpath + '.ts');
+    return path.join(distCoreCjs, subpath + '.js');
   }
   return path.join(__dirname, 'node_modules/@playerstack/core/dist/cjs', subpath + '.js');
 }
@@ -16,7 +18,10 @@ function corePath(subpath) {
 module.exports = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['esbuild-jest', { sourcemap: true, loaders: { '.js': 'js', '.jsx': 'jsx', '.ts': 'ts', '.tsx': 'tsx' } }],
+    '^.+\\.(js|jsx|ts|tsx)$': [
+      'esbuild-jest',
+      { sourcemap: true, loaders: { '.js': 'js', '.jsx': 'jsx', '.ts': 'ts', '.tsx': 'tsx' } },
+    ],
   },
   clearMocks: true,
   collectCoverage: false,
@@ -32,7 +37,6 @@ module.exports = {
   moduleNameMapper: {
     '^react$': '<rootDir>/node_modules/react',
     '^react-dom(.*)$': '<rootDir>/node_modules/react-dom$1',
-    '^@playerstack/core/hooks$': corePath('hooks/index'),
     '^@playerstack/core/patterns$': corePath('patterns'),
     '^@playerstack/core/chapters$': corePath('chapters'),
     '^@playerstack/core/heatmap$': corePath('heatmap'),

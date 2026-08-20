@@ -1,10 +1,10 @@
 import React from 'react';
 
-import PlayerProxy from '@core/PlayerProxy';
+import AudioElement from '@core/AudioElement';
 import AudioPlayerSkin from '@AudioPlayer/AudioPlayerSkin';
 import { audioPlayerStateInitial as playerStateInitial } from '@playerstack/core';
 import usePlayerProxy from '@AudioMediaPlayer/hooks/usePlayerProxy';
-import { useVolume } from '@playerstack/core/hooks';
+import { useVolume } from '@hooks/useVolume';
 import { createWebVolumeAdapter } from '@utils/volumeAdapter';
 import { Provider } from '@context/index';
 import AudioPlayerWrapper from '@AudioMediaPlayer/AudioPlayerWrapper';
@@ -193,21 +193,14 @@ const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
     <Provider language={props.language}>
       <AudioPlayerWrapper ref={playerRef} tabIndex={0} role="application" dir="ltr">
         {videoUrl && (
-          <PlayerProxy
+          <AudioElement
             ref={ref}
-            activePlayer={props.activePlayer}
             loop={playerState.loop}
             muted={playerState.isMuted}
             playbackRate={playerState.playbackRate}
-            playsinline={props.playsinline}
-            progressInterval={props.progressInterval}
-            stopOnUnmount={props.stopOnUnmount}
             volume={playerState.volume}
             url={videoUrl}
-            width="0"
-            height="0"
             playing={playerState.playing}
-            viewType="audio"
             config={playerConfig}
             {...playerProxy}
           />
@@ -224,6 +217,7 @@ const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
           waiting={playerState.isBuffering || props.waiting}
           duration={playerState.duration}
           buffered={playerState.loaded}
+          bufferedRanges={playerState.bufferedRanges || []}
           currentTime={playerState.played}
           muted={playerState.isMuted}
           volume={playerState.volume}
