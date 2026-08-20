@@ -476,23 +476,25 @@ const AudioPlayerSkin = React.forwardRef(
                         }
 
                         // Multi-range buffer: compute buffered portions within this segment
-                        const segmentBufferRanges = bufferedRanges.length > 0
-                          ? bufferedRanges
-                              .map((range) => {
-                                const overlapStart = Math.max(range.start, seg.startTime);
-                                const overlapEnd = Math.min(range.end, seg.endTime);
-                                if (overlapStart >= overlapEnd) return null;
-                                return {
-                                  leftPct: ((overlapStart - seg.startTime) / segDuration) * 100,
-                                  widthPct: ((overlapEnd - overlapStart) / segDuration) * 100,
-                                };
-                              })
-                              .filter(Boolean)
-                          : [];
+                        const segmentBufferRanges =
+                          bufferedRanges.length > 0
+                            ? bufferedRanges
+                                .map((range) => {
+                                  const overlapStart = Math.max(range.start, seg.startTime);
+                                  const overlapEnd = Math.min(range.end, seg.endTime);
+                                  if (overlapStart >= overlapEnd) return null;
+                                  return {
+                                    leftPct: ((overlapStart - seg.startTime) / segDuration) * 100,
+                                    widthPct: ((overlapEnd - overlapStart) / segDuration) * 100,
+                                  };
+                                })
+                                .filter(Boolean)
+                            : [];
 
-                        const maxBufferedPct = segmentBufferRanges.length > 0
-                          ? Math.max(...segmentBufferRanges.map((r) => r.leftPct + r.widthPct))
-                          : 0;
+                        const maxBufferedPct =
+                          segmentBufferRanges.length > 0
+                            ? Math.max(...segmentBufferRanges.map((r) => r.leftPct + r.widthPct))
+                            : 0;
 
                         return (
                           <StyledChapterSegment
@@ -501,7 +503,10 @@ const AudioPlayerSkin = React.forwardRef(
                             $hovered={hoveredSegmentIndex === index}
                           >
                             {segmentBufferRanges.map((r, i) => (
-                              <StyledChapterBuffered key={i} style={{ position: 'absolute', left: `${r.leftPct}%`, width: `${r.widthPct}%` }} />
+                              <StyledChapterBuffered
+                                key={i}
+                                style={{ position: 'absolute', left: `${r.leftPct}%`, width: `${r.widthPct}%` }}
+                              />
                             ))}
                             <StyledChapterFilled
                               style={{ width: `${fillPercent}%`, background: isAdActive ? '#fc0' : undefined }}
@@ -583,7 +588,11 @@ const AudioPlayerSkin = React.forwardRef(
               )}
               <Tooltip label={muted ? i18n.unmute : i18n.mute} disabled={volumeDragging}>
                 <StyledIconButton onClick={onMutedClick} aria-label={muted ? i18n.unmute : i18n.mute}>
-                  {muted || volume === 0 ? <Icon icon={mutedIcon} {...iconProps} /> : <Icon icon={unmutedIcon} {...iconProps} />}
+                  {muted || volume === 0 ? (
+                    <Icon icon={mutedIcon} {...iconProps} />
+                  ) : (
+                    <Icon icon={unmutedIcon} {...iconProps} />
+                  )}
                 </StyledIconButton>
               </Tooltip>
             </StyledVolumeContainer>

@@ -169,7 +169,7 @@ const AudioElement = React.forwardRef(function AudioElement(
       engineRef.current = null;
       orchestratorRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps — config is stabilized externally; engine is created once
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- config is stabilized externally; engine is created once
   }, []);
 
   // Sync playing prop

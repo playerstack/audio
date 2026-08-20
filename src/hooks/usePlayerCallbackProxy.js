@@ -194,7 +194,7 @@ export function usePlayerCallbackProxy(params) {
       },
     }),
     // Empty deps — stable forever, reads current values from refs
-    // eslint-disable-next-line react-hooks/exhaustive-deps — proxy must remain stable; all values read from refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- proxy must remain stable; all values read from refs
     [],
   );
 
