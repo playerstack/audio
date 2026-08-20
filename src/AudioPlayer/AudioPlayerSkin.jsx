@@ -3,21 +3,22 @@ import PropTypes from 'prop-types';
 import { formatTime, isMobile } from '@playerstack/core';
 
 import {
-  AudioPlayIcon,
-  AudioPauseIcon,
-  AudioReplayIcon,
-  MutedIcon,
-  UnmutedIcon,
-  SkipBackIcon,
-  SkipForwardIcon,
-  SkipAdIcon,
+  audioPlayIcon,
+  audioPauseIcon,
+  audioReplayIcon,
+  mutedIcon,
+  unmutedIcon,
+  skipBackIcon,
+  skipForwardIcon,
+  skipAdIcon,
 } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import AudioSettingsMenu from '@AudioPlayer/components/AudioSettingsMenu';
 import Tooltip from '@Commons/Tooltip';
 import { buildIconProps } from '@playerstack/core';
 import { getValue } from '@Commons/TimeTooltip/utils';
-import { useChapters } from '@playerstack/core/hooks';
-import { useAds } from '@playerstack/core/hooks';
+import { useChapters } from '@hooks/useChapters';
+import { useAds } from '@hooks/useAds';
 import { webAdsPlatform } from '@utils/adsPlatform';
 import { useAppDispatch, useAppSelector } from '@context/index';
 
@@ -69,6 +70,7 @@ const AudioPlayerSkin = React.forwardRef(
       waiting,
       duration,
       buffered = null,
+      bufferedRanges = [],
       currentTime,
       muted,
       volume,
@@ -391,7 +393,7 @@ const AudioPlayerSkin = React.forwardRef(
             <Tooltip label={i18n.skipBack}>
               <StyledSkipButtonWrapper $visible={isPlaying}>
                 <StyledSkipButton onClick={handleSkipBack} aria-label={i18n.skipBack}>
-                  <SkipBackIcon {...iconProps} />
+                  <Icon icon={skipBackIcon} {...iconProps} />
                 </StyledSkipButton>
               </StyledSkipButtonWrapper>
             </Tooltip>
@@ -406,7 +408,7 @@ const AudioPlayerSkin = React.forwardRef(
                 style={{ opacity: canSkip ? 1 : 0.6, cursor: canSkip ? 'pointer' : 'default' }}
               >
                 {canSkip ? (
-                  <SkipAdIcon width={24} height={24} />
+                  <Icon icon={skipAdIcon} width={24} height={24} />
                 ) : (
                   <span style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{skipCountdown}s</span>
                 )}
@@ -419,11 +421,11 @@ const AudioPlayerSkin = React.forwardRef(
                 aria-label={ended ? i18n.replay : paused ? i18n.play : i18n.pause}
               >
                 {ended ? (
-                  <AudioReplayIcon {...iconProps} />
+                  <Icon icon={audioReplayIcon} {...iconProps} />
                 ) : paused ? (
-                  <AudioPlayIcon {...iconProps} />
+                  <Icon icon={audioPlayIcon} {...iconProps} />
                 ) : (
-                  <AudioPauseIcon {...iconProps} />
+                  <Icon icon={audioPauseIcon} {...iconProps} />
                 )}
               </StyledPlayButton>
             </Tooltip>
@@ -434,7 +436,7 @@ const AudioPlayerSkin = React.forwardRef(
             <Tooltip label={i18n.skipForward}>
               <StyledSkipButtonWrapper $visible={isPlaying}>
                 <StyledSkipButton onClick={handleSkipForward} aria-label={i18n.skipForward}>
-                  <SkipForwardIcon {...iconProps} />
+                  <Icon icon={skipForwardIcon} {...iconProps} />
                 </StyledSkipButton>
               </StyledSkipButtonWrapper>
             </Tooltip>
@@ -473,13 +475,24 @@ const AudioPlayerSkin = React.forwardRef(
                           fillPercent = ((currentTime - seg.startTime) / segDuration) * 100;
                         }
 
-                        const bufferedTime = buffered != null ? buffered * duration : 0;
-                        let bufferedPercent = 0;
-                        if (bufferedTime >= seg.endTime) {
-                          bufferedPercent = 100;
-                        } else if (bufferedTime > seg.startTime) {
-                          bufferedPercent = ((bufferedTime - seg.startTime) / segDuration) * 100;
-                        }
+                        // Multi-range buffer: compute buffered portions within this segment
+                        const segmentBufferRanges = bufferedRanges.length > 0
+                          ? bufferedRanges
+                              .map((range) => {
+                                const overlapStart = Math.max(range.start, seg.startTime);
+                                const overlapEnd = Math.min(range.end, seg.endTime);
+                                if (overlapStart >= overlapEnd) return null;
+                                return {
+                                  leftPct: ((overlapStart - seg.startTime) / segDuration) * 100,
+                                  widthPct: ((overlapEnd - overlapStart) / segDuration) * 100,
+                                };
+                              })
+                              .filter(Boolean)
+                          : [];
+
+                        const maxBufferedPct = segmentBufferRanges.length > 0
+                          ? Math.max(...segmentBufferRanges.map((r) => r.leftPct + r.widthPct))
+                          : 0;
 
                         return (
                           <StyledChapterSegment
@@ -487,13 +500,15 @@ const AudioPlayerSkin = React.forwardRef(
                             style={{ width: `${widthPercent}%` }}
                             $hovered={hoveredSegmentIndex === index}
                           >
-                            <StyledChapterBuffered style={{ width: `${bufferedPercent}%` }} />
+                            {segmentBufferRanges.map((r, i) => (
+                              <StyledChapterBuffered key={i} style={{ position: 'absolute', left: `${r.leftPct}%`, width: `${r.widthPct}%` }} />
+                            ))}
                             <StyledChapterFilled
                               style={{ width: `${fillPercent}%`, background: isAdActive ? '#fc0' : undefined }}
                             />
-                            {waiting && bufferedPercent < 100 && (
+                            {waiting && maxBufferedPct < 100 && (
                               <StyledLoadingStripes
-                                style={{ clipPath: `inset(0 0 0 ${Math.max(bufferedPercent, fillPercent)}%)` }}
+                                style={{ clipPath: `inset(0 0 0 ${Math.max(maxBufferedPct, fillPercent)}%)` }}
                               />
                             )}
                           </StyledChapterSegment>
@@ -501,7 +516,20 @@ const AudioPlayerSkin = React.forwardRef(
                       })
                     ) : (
                       <StyledSingleTrack>
-                        <StyledTimelineBuffered style={{ width: `${bufferedProgress}%` }} />
+                        {bufferedRanges.length > 0 && duration > 0 ? (
+                          bufferedRanges.map((range, i) => (
+                            <StyledTimelineBuffered
+                              key={i}
+                              style={{
+                                position: 'absolute',
+                                left: `${(range.start / duration) * 100}%`,
+                                width: `${((range.end - range.start) / duration) * 100}%`,
+                              }}
+                            />
+                          ))
+                        ) : (
+                          <StyledTimelineBuffered style={{ width: `${bufferedProgress}%` }} />
+                        )}
                         <StyledTimelineFilled
                           style={{ width: `${progress}%`, background: isAdActive ? '#fc0' : undefined }}
                         />
@@ -555,7 +583,7 @@ const AudioPlayerSkin = React.forwardRef(
               )}
               <Tooltip label={muted ? i18n.unmute : i18n.mute} disabled={volumeDragging}>
                 <StyledIconButton onClick={onMutedClick} aria-label={muted ? i18n.unmute : i18n.mute}>
-                  {muted || volume === 0 ? <MutedIcon {...iconProps} /> : <UnmutedIcon {...iconProps} />}
+                  {muted || volume === 0 ? <Icon icon={mutedIcon} {...iconProps} /> : <Icon icon={unmutedIcon} {...iconProps} />}
                 </StyledIconButton>
               </Tooltip>
             </StyledVolumeContainer>
@@ -581,6 +609,12 @@ AudioPlayerSkin.propTypes = {
   waiting: PropTypes.bool,
   duration: PropTypes.number.isRequired,
   buffered: PropTypes.number,
+  bufferedRanges: PropTypes.arrayOf(
+    PropTypes.shape({
+      start: PropTypes.number.isRequired,
+      end: PropTypes.number.isRequired,
+    }),
+  ),
   currentTime: PropTypes.number.isRequired,
   muted: PropTypes.bool.isRequired,
   volume: PropTypes.number.isRequired,
@@ -623,6 +657,7 @@ export default React.memo(
     p.duration === n.duration &&
     p.currentTime === n.currentTime &&
     p.buffered === n.buffered &&
+    p.bufferedRanges === n.bufferedRanges &&
     p.muted === n.muted &&
     p.volume === n.volume &&
     p.playbackRate === n.playbackRate &&

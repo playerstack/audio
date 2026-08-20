@@ -6,10 +6,10 @@ jest.mock('react-fast-compare', () => ({
   default: (a, b) => JSON.stringify(a) === JSON.stringify(b),
 }));
 
-// Mock PlayerProxy
-jest.mock('../../src/core/PlayerProxy', () => {
+// Mock AudioElement
+jest.mock('../../src/core/AudioElement', () => {
   const ReactInner = require('react');
-  return ReactInner.forwardRef(function MockPlayerProxy(props, ref) {
+  return ReactInner.forwardRef(function MockAudioElement(props, ref) {
     ReactInner.useImperativeHandle(ref, () => ({
       getDuration: () => 120,
       getCurrentTime: () => 30,
@@ -93,9 +93,7 @@ describe('AudioMediaPlayerSkin — full coverage', () => {
       getPlayer: () => document.createElement('audio'),
       getInternalPlayer: () => null,
     };
-    const { container } = render(
-      <AudioMediaPlayerSkin {...baseProps} player={mockPlayer} playing={false} />,
-    );
+    const { container } = render(<AudioMediaPlayerSkin {...baseProps} player={mockPlayer} playing={false} />);
     // Skip forward button triggers changeCurrentTime
     // First switch to playing to see skip buttons
   });
@@ -207,9 +205,7 @@ describe('AudioMediaPlayerSkin — full coverage', () => {
       getPlayer: () => globalThis.document.createElement('audio'),
       getInternalPlayer: () => null,
     };
-    const { container } = render(
-      <AudioMediaPlayerSkin {...baseProps} player={mockPlayerWithSeek} playing={true} />,
-    );
+    const { container } = render(<AudioMediaPlayerSkin {...baseProps} player={mockPlayerWithSeek} playing={true} />);
     // Now duration should be 120 (from onDuration mock), skip buttons work
     const skipForwardBtn = container.querySelector('[aria-label="Skip forward"]');
     if (skipForwardBtn) {
@@ -233,7 +229,14 @@ describe('AudioMediaPlayerSkin — full coverage', () => {
     // onSeeking is passed to AudioPlayerSkin timeline drag
     // Timeline interaction triggers it
     jest.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
-      left: 0, right: 200, width: 200, top: 0, bottom: 10, height: 10, x: 0, y: 0,
+      left: 0,
+      right: 200,
+      width: 200,
+      top: 0,
+      bottom: 10,
+      height: 10,
+      x: 0,
+      y: 0,
     });
     const seekTo = jest.fn();
     const mockPlayerWithSeek = {
@@ -244,9 +247,7 @@ describe('AudioMediaPlayerSkin — full coverage', () => {
       getPlayer: () => globalThis.document.createElement('audio'),
       getInternalPlayer: () => null,
     };
-    const { container } = render(
-      <AudioMediaPlayerSkin {...baseProps} player={mockPlayerWithSeek} playing={true} />,
-    );
+    const { container } = render(<AudioMediaPlayerSkin {...baseProps} player={mockPlayerWithSeek} playing={true} />);
     // Find timeline and trigger mousedown (tests onSeeking callback)
     const allDivs = Array.from(container.querySelectorAll('div'));
     for (const div of allDivs) {

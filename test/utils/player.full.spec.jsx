@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
-import { lazy } from '@playerstack/core/hooks';
+import { lazy } from '@hooks/utils/lazy';
 
 describe('lazy — full coverage', () => {
   test('returns a React.lazy-like component', () => {

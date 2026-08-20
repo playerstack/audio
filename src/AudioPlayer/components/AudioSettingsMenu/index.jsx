@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { SettingsIcon, ArrowLeftIcon, ArrowRightIcon } from '@playerstack/core/icons';
+import { settingsIcon, arrowLeftIcon, arrowRightIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import Tooltip from '@Commons/Tooltip';
 import { buildIconProps } from '@playerstack/core';
 import { useAppSelector } from '@context/index';
@@ -97,7 +98,7 @@ const AudioSettingsMenu = ({ playbackRate, changePlaybackRate }) => {
           onClick={handleButtonClick}
           $expanded={menuOpen}
         >
-          <SettingsIcon {...iconProps} />
+          <Icon icon={settingsIcon} {...iconProps} />
         </StyledSettingsButton>
       </Tooltip>
 
@@ -109,7 +110,7 @@ const AudioSettingsMenu = ({ playbackRate, changePlaybackRate }) => {
               <StyledMenuItemTitle>{i18n.speed}</StyledMenuItemTitle>
               <StyledMenuItemValue>
                 {speedLabel}
-                <ArrowRightIcon width={20} height={20} />
+                <Icon icon={arrowRightIcon} width={20} height={20} />
               </StyledMenuItemValue>
             </button>
           </StyledMenuItem>
@@ -119,7 +120,7 @@ const AudioSettingsMenu = ({ playbackRate, changePlaybackRate }) => {
       {/* Speed submenu */}
       <StyledSubMenuOverlay $visible={subMenuOpen}>
         <StyledSubMenuHeader onClick={handleGoBack}>
-          <ArrowLeftIcon width={16} height={16} />
+          <Icon icon={arrowLeftIcon} width={16} height={16} />
           {i18n.speed}
         </StyledSubMenuHeader>
         <StyledSubMenuContent $show={subMenuReady}>

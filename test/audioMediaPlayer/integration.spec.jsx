@@ -6,9 +6,9 @@ jest.mock('react-fast-compare', () => ({
   default: (a, b) => JSON.stringify(a) === JSON.stringify(b),
 }));
 
-jest.mock('../../src/core/PlayerProxy', () => {
+jest.mock('../../src/core/AudioElement', () => {
   const ReactInner = require('react');
-  return ReactInner.forwardRef(function MockPlayerProxy(props, ref) {
+  return ReactInner.forwardRef(function MockAudioElement(props, ref) {
     ReactInner.useImperativeHandle(ref, () => ({
       getDuration: () => 120,
       getCurrentTime: () => 30,
@@ -105,7 +105,10 @@ describe('AudioMediaPlayerSkin — integration (callbacks coverage)', () => {
   });
 
   test('settings menu changes playbackRate', () => {
-    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => { cb(); return 1; });
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      cb();
+      return 1;
+    });
     const { container, getAllByText } = render(<AudioMediaPlayerSkin {...baseProps} />);
     const settingsBtn = container.querySelector('[aria-label="Settings"]');
     fireEvent.click(settingsBtn);
