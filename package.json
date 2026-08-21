@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "node scripts/link-local-deps.js",
     "clean": "rimraf lib coverage *.d.ts",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --max-warnings=0",
     "lint:fix": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "format": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -67,7 +67,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rimraf": "^3.0.2",
-    "styled-components": "^6.1.8",
     "typescript": "^5.7.3"
   },
   "auto-changelog": {

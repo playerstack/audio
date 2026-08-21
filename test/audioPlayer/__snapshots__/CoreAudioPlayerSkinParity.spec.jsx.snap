@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CoreAudioPlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 22.2–22.5) ads active state 1`] = `
+<playerstack-media-controller
+  data-skin="audio"
+>
+  <div
+    part="metadata"
+  />
+  <playerstack-ad-overlay />
+  <playerstack-audio-controls
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-settings />
+</playerstack-media-controller>
+`;
+
+exports[`CoreAudioPlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 22.2–22.5) default state 1`] = `
+<playerstack-media-controller
+  data-skin="audio"
+>
+  <div
+    part="metadata"
+  />
+  <playerstack-audio-controls
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-settings />
+</playerstack-media-controller>
+`;
+
+exports[`CoreAudioPlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 22.2–22.5) playing state (paused=false) 1`] = `
+<playerstack-media-controller
+  data-skin="audio"
+>
+  <div
+    part="metadata"
+  />
+  <playerstack-audio-controls
+    data-playing="true"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-settings />
+</playerstack-media-controller>
+`;
+
+exports[`CoreAudioPlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 22.2–22.5) with chapters 1`] = `
+<playerstack-media-controller
+  data-skin="audio"
+>
+  <div
+    part="metadata"
+  />
+  <playerstack-chapters
+    data-active="true"
+  />
+  <playerstack-audio-controls
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-settings />
+</playerstack-media-controller>
+`;
+
+exports[`CoreAudioPlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 22.2–22.5) with nav buttons 1`] = `
+<playerstack-media-controller
+  data-skin="audio"
+>
+  <div
+    part="metadata"
+  />
+  <playerstack-nav-buttons />
+  <playerstack-audio-controls
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-settings />
+</playerstack-media-controller>
+`;
+
+exports[`CoreAudioPlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 22.2–22.5) with title/artist/poster metadata 1`] = `
+<playerstack-media-controller
+  data-skin="audio"
+>
+  <img
+    alt="Song Title"
+    part="poster"
+    src="https://example.com/cover.jpg"
+  />
+  <div
+    part="metadata"
+  >
+    <span
+      part="title"
+    >
+      Song Title
+    </span>
+    <span
+      part="artist"
+    >
+      The Artist
+    </span>
+  </div>
+  <playerstack-audio-controls
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-settings />
+</playerstack-media-controller>
+`;
